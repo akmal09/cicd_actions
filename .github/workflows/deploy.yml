@@ -28,10 +28,11 @@ jobs:
         docker build -t $IMAGE_NAME:$IMAGE_TAG .
         docker push $IMAGE_NAME:$IMAGE_TAG
 
-    - name: Set up kubeconfig
+    - name: Set up kubeconfig from repo
       run: |
-        echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > $HOME/kubeconfig
-        echo "KUBECONFIG=$HOME/kubeconfig" >> $GITHUB_ENV
+        mkdir -p $HOME/.kube
+        cp .kube/config $HOME/.kube/config
+        echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
 
     - name: Test Kubernetes connectivity
       run: |
