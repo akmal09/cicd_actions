@@ -30,19 +30,14 @@ jobs:
 
     - name: Set up kubeconfig
       run: |
-        echo "${{ var.KUBECONFIG_DATA }}" | base64 -d > kubeconfig
-        echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
+        echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > $HOME/kubeconfig
+        echo "KUBECONFIG=$HOME/kubeconfig" >> $GITHUB_ENV
 
-    - name: Debug kubeconfig
+    - name: Test Kubernetes connectivity
       run: |
         kubectl get nodes
-    
-    - name: Deploy to AKS
-      run: |
-        kubectl apply -f deployment.yaml
-        kubectl apply -f service.yaml
 
-    - name: Deploy to AKS
+    - name: Deploy Kubernetes manifests
       run: |
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
